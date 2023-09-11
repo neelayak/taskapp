@@ -6,32 +6,35 @@ import 'package:taskapp/listdatamodel.dart';
 
 class ListViewModel with ChangeNotifier {
   List<ListDatamodel> list = [];
-
+List<int>_pos=[];
+List<int> get pos=>_pos;
   getdata() async {
-    final response = await http
-        .get(Uri.parse('https://date.nager.at/api/v3/PublicHolidays/2023/JP'));
-    List<ListDatamodel> temp = (jsonDecode(response.body) as List)
-        .map((itemWord) => ListDatamodel.fromJson(itemWord))
-        .toList();
-    print(temp);
-    list=temp;
-    return temp;
-  }
-  setbookmark(int index){
-    ListDatamodel data= list[index];
-    list.removeAt(index);
 
-    list.insert(index,ListDatamodel(date: data.date,localName: data.localName,name: data.name,countryCode: data.countryCode,fixed: true,global: data.global,counties: data.counties,launchYear: data.launchYear,types: data.types));
+      final response = await http.get(
+          Uri.parse('https://date.nager.at/api/v3/PublicHolidays/2023/JP'));
+      List<ListDatamodel> temp = (jsonDecode(response.body) as List)
+          .map((itemWord) => ListDatamodel.fromJson(itemWord))
+          .toList();
+      print(temp);
+      list = temp;
+      notifyListeners();
+      return temp;
 
-  notifyListeners();
   }
 
-  removebookmark(int index){
-    ListDatamodel data= list[index];
-    list.removeAt(index);
-
-    list.insert(index,ListDatamodel(date: data.date,localName: data.localName,name: data.name,countryCode: data.countryCode,fixed: false,global: data.global,counties: data.counties,launchYear: data.launchYear,types: data.types));
+  setbookmark(int index) {
+    final exist=_pos.contains(index);
+    if(exist){
+      _pos.remove(index);
+    }else{
+      _pos.add(index);
+    }
 
     notifyListeners();
   }
+
+isexist(int index){
+  final exist=_pos.contains(index);
+return exist;
+}
 }

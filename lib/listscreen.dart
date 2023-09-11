@@ -35,19 +35,14 @@ class _ListScreenState extends State<ListScreen> {
                             itemCount: list.length,
                             itemBuilder: (context, index) {
                               return ListTile(
-                                onTap: (){
+                                onTap: () {
                                   setState(() {
-                                    if(list[index].fixed!){
-                                      listnviewmodel.removebookmark(index);
-                                    }else{
-                                      listnviewmodel.setbookmark(index);
-                                    }
+                                    listnviewmodel.setbookmark(index);
                                   });
-
                                 },
                                 title: Text(list[index].name!),
                                 subtitle: Text(list[index].date!),
-                                trailing: (list[index].fixed!)
+                                trailing: (listnviewmodel.isexist(index))
                                     ? Icon(Icons.bookmark)
                                     : Icon(Icons.bookmark_border),
                               );
